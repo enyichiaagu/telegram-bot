@@ -2,9 +2,10 @@
   "name": "telegram-bot",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node --env-file=.env bot.js",
-    "watch": "tsc -w bot.ts",
+    "watch": "tsc -w",
     "dev": "node --env-file=.env --watch bot.js"
   },
   "keywords": [],
@@ -12,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "grammy": "^1.34.0"
   },
   "devDependencies": {
