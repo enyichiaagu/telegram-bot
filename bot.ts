@@ -58,15 +58,13 @@ bot.on('message:voice', async (ctx) => {
   return ctx.reply(result.response.text(), { parse_mode: 'Markdown' });
 });
 
-type ImageExtension = 'jpg' | 'jpeg' | 'png';
 type MINE = 'image/jpeg' | 'image/png';
-const ExtToMINE: Record<ImageExtension, MINE> = {
+const ExtToMINE: Record<string, MINE> = {
   jpeg: 'image/jpeg',
   jpg: 'image/jpeg',
   png: 'image/png',
 };
 
-//TODO: Fix type handling later
 bot.on('message:photo', async (ctx) => {
   const caption: string | undefined = ctx.message.caption;
   const photoFile: File = await ctx.getFile();
@@ -80,8 +78,8 @@ bot.on('message:photo', async (ctx) => {
   const base64Photo: string = Buffer.from(data).toString('base64');
 
   let match: RegExpMatchArray | null = photoFilePath.match(/[^.]+$/);
-  let photoExt = (match ? match[0] : null) as ImageExtension;
-  if (!photoExt) return;
+  if (!match) return;
+  let photoExt: string = match[0];
 
   const prompt: Array<string | Part> = [
     { inlineData: { mimeType: ExtToMINE[photoExt], data: base64Photo } },
