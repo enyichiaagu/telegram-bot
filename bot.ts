@@ -41,9 +41,7 @@ bot.on('message:voice', async (ctx) => {
 
   const fetchedResponse = await fetch(fileURL);
   const data: ArrayBuffer = await fetchedResponse.arrayBuffer();
-  const base64Audio: string = btoa(
-    String.fromCharCode(...new Uint8Array(data))
-  );
+  const base64Audio: string = Buffer.from(data).toString('base64');
 
   const prompt: Array<string | Part> = [
     {
@@ -56,6 +54,40 @@ bot.on('message:voice', async (ctx) => {
       text: 'Please respond to the audio prompt.',
     },
   ];
+  const result = await chat.sendMessage(prompt);
+  return ctx.reply(result.response.text(), { parse_mode: 'Markdown' });
+});
+
+type ImageExtension = 'jpg' | 'jpeg' | 'png';
+type MINE = 'image/jpeg' | 'image/png';
+const ExtToMINE: Record<ImageExtension, MINE> = {
+  jpeg: 'image/jpeg',
+  jpg: 'image/jpeg',
+  png: 'image/png',
+};
+
+//TODO: Fix type handling later
+bot.on('message:photo', async (ctx) => {
+  const caption: string | undefined = ctx.message.caption;
+  const photoFile: File = await ctx.getFile();
+  const photoFilePath: string | undefined = photoFile.file_path;
+
+  if (!photoFilePath) return;
+  const photoURL: string = `${BOT_API_SERVER}/file/bot${TELEGRAM_BOT_TOKEN}/${photoFilePath}`;
+
+  const fetchedResponse = await fetch(photoURL);
+  const data: ArrayBuffer = await fetchedResponse.arrayBuffer();
+  const base64Photo: string = Buffer.from(data).toString('base64');
+
+  let match: RegExpMatchArray | null = photoFilePath.match(/[^.]+$/);
+  let photoExt = (match ? match[0] : null) as ImageExtension;
+  if (!photoExt) return;
+
+  const prompt: Array<string | Part> = [
+    { inlineData: { mimeType: ExtToMINE[photoExt], data: base64Photo } },
+    { text: caption ?? 'Describe what you see in the photo' },
+  ];
+
   const result = await chat.sendMessage(prompt);
   return ctx.reply(result.response.text(), { parse_mode: 'Markdown' });
 });
