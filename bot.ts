@@ -13,11 +13,17 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
   model: 'gemini-1.5-flash',
   systemInstruction:
-    'You are a Telegram Chatbot. Maintain a friendly tone. Keep responses one paragraph short unless told otherwise. You can respond to transcribed audio and pictures.',
+    'You are a Telegram Chatbot. Maintain a friendly tone. Keep responses one paragraph short unless told otherwise. You have the ability to respond to audio and pictures.',
 });
 const chat = model.startChat();
 
+// Bot Credentials
+// BOT_NAME = 'Gemini AI Bot',
+// BOT_DESCRIPTION = `Telegram Bot that replies using Google's Gemini API`,
+// SHORT_DESCRIPTION = `Telegram Bot using Gemini API`;
+
 bot.command('start', async (ctx) => {
+  console.log(ctx);
   const user: User | undefined = ctx.from;
   const fullName: string = `${user?.first_name} ${user?.last_name}`;
 
@@ -97,14 +103,3 @@ bot.catch((error) => {
 });
 
 bot.start();
-
-// Use if else to make sure the name and description match
-// const BOT_NAME = 'Gemini AI Bot',
-//   BOT_DESCRIPTION = `Telegram Bot that replies using Google's Gemini API`,
-//   SHORT_DESCRIPTION = `Telegram Bot using Gemini API`;
-
-// async function setupBot() {
-//   await bot.api.setMyName(BOT_NAME);
-//   await bot.api.setMyDescription(BOT_DESCRIPTION);
-//   await bot.api.setMyShortDescription(SHORT_DESCRIPTION);
-// }
