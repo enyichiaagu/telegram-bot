@@ -19,11 +19,10 @@ const chat = model.startChat();
 
 // Bot Credentials
 // BOT_NAME = 'Gemini AI Bot',
-// BOT_DESCRIPTION = `Telegram Bot that replies using Google's Gemini API`,
+// BOT_DESCRIPTION = `Telegram Bot that replies using Google's Gemini API. It can respond to text, voice notes, and images.`,
 // SHORT_DESCRIPTION = `Telegram Bot using Gemini API`;
 
 bot.command('start', async (ctx) => {
-  console.log(ctx);
   const user: User | undefined = ctx.from;
   const fullName: string = `${user?.first_name} ${user?.last_name}`;
 
@@ -103,3 +102,4 @@ bot.catch((error) => {
 });
 
 bot.start();
+//hi
