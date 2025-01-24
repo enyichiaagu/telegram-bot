@@ -102,4 +102,3 @@ bot.catch((error) => {
 });
 
 bot.start();
-//hi
